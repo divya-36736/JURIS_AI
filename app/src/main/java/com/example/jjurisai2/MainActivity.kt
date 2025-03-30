@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         fragmentManager = supportFragmentManager
 
-        // ✅ Load HomeFragment by default when the app starts
+        //  Load HomeFragment by default when the app starts
         if (savedInstanceState == null) {
             openFragment(HomeFragment())
         }
@@ -66,7 +66,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_home -> openFragment(HomeFragment())
             R.id.nav_profile -> openFragment(ProfileFragment())
             R.id.nav_settings -> openFragment(Settings())
-            R.id.nav_share -> Toast.makeText(this, "Share the app",Toast.LENGTH_SHORT).show()
+            R.id.nav_share -> {
+                shareApp()
+                return true
+            }
             R.id.nav_logout -> {
                 logoutUser()
                 return true
@@ -76,9 +79,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    private fun shareApp() {
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "Check out this amazing app: https://play.google.com/store/apps/details?id=com.example.yourapp")
+            type = "text/plain"
+        }
+        startActivity(Intent.createChooser(shareIntent, "Share via"))
+    }
+
     private fun logoutUser() {
         val intent = Intent(this, LoginPage::class.java)
-        startActivity(intent)  // ✅ Now it will navigate to LoginPage
-        finish()  // ✅ Finish MainActivity to prevent going back on pressing back
+        startActivity(intent)
+        finish()
     }
 }
